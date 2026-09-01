@@ -80,14 +80,22 @@ export function StaffManager({ initialStaff }: { initialStaff: Staff[] }) {
   }
 
   function handleToggleActive(member: Staff) {
+    // تعطيل حساب إجراء حساس — لازم تأكيد صريح قبل التنفيذ
+    if (member.is_active) {
+      const confirmed = confirm(
+        `هل أنت متأكد من تعطيل حساب "${member.full_name}"؟\nلن يستطيع تسجيل الدخول بعد التعطيل.`
+      );
+      if (!confirmed) return;
+    }
+
     startTransition(async () => {
       await toggleStaffActive(member.id, !member.is_active);
     });
   }
 
   return (
-    <main dir="rtl" className="min-h-screen bg-[#141110] px-4 py-8 text-[#F5EFE6]">
-      <div className="mx-auto max-w-2xl">
+    <main dir="rtl" className="min-h-screen bg-[#141110] px-4 py-8 pt-20 text-[#F5EFE6] md:px-8 md:pt-8">
+      <div className="mx-auto max-w-3xl">
         <div className="mb-6 flex items-center justify-between">
           <h1 className="text-2xl font-bold">إدارة الموظفين</h1>
           <button
@@ -117,7 +125,7 @@ export function StaffManager({ initialStaff }: { initialStaff: Staff[] }) {
             {initialStaff.map((member) => (
               <div
                 key={member.id}
-                className="flex items-center gap-3 rounded-xl border border-[#2A241F] bg-[#1D1815] p-3"
+                className="flex flex-wrap items-center gap-3 rounded-xl border border-[#2A241F] bg-[#1D1815] p-3"
               >
                 <div className="flex-1">
                   <p className="font-medium">{member.full_name}</p>

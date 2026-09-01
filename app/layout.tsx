@@ -1,7 +1,7 @@
 import type { Metadata } from 'next';
 import { Markazi_Text, IBM_Plex_Sans_Arabic } from 'next/font/google';
 import './globals.css';
-import { Nav } from './Nav';
+import { Sidebar } from './Sidebar';
 
 const displayFont = Markazi_Text({
   subsets: ['arabic'],
@@ -30,8 +30,10 @@ export default function RootLayout({
       <body
         className={`${displayFont.variable} ${bodyFont.variable} font-[var(--font-arabic-body)] antialiased`}
       >
-        <Nav />
-        {children}
+        <div className="flex min-h-screen">
+          <Sidebar />
+          <div className="min-w-0 flex-1">{children}</div>
+        </div>
       </body>
     </html>
   );

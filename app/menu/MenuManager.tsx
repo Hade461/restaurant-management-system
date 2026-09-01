@@ -153,7 +153,7 @@ export function MenuManager({ initialItems }: { initialItems: MenuItem[] }) {
   }));
 
   return (
-    <main dir="rtl" className="min-h-screen bg-[#141110] px-4 py-8 text-[#F5EFE6]">
+    <main dir="rtl" className="min-h-screen bg-[#141110] px-4 py-8 pt-20 text-[#F5EFE6] md:px-8 md:pt-8">
       <div className="mx-auto max-w-3xl">
         <div className="mb-6 flex items-center justify-between">
           <h1 className="text-2xl font-bold">إدارة المنيو</h1>
@@ -207,7 +207,7 @@ export function MenuManager({ initialItems }: { initialItems: MenuItem[] }) {
                           <button
                             onClick={() => handleToggleAvailability(item)}
                             disabled={isPending}
-                            className={`rounded-lg px-2.5 py-1.5 text-xs font-medium ${
+                            className={`rounded-lg px-2.5 py-1.5 text-xs font-medium transition active:scale-95 ${
                               item.is_available
                                 ? 'bg-[#1F3A2A] text-[#7FCB9C]'
                                 : 'bg-[#3A1F1F] text-[#E88A8A]'
@@ -218,7 +218,7 @@ export function MenuManager({ initialItems }: { initialItems: MenuItem[] }) {
 
                           <button
                             onClick={() => openEditForm(item)}
-                            className="rounded-lg px-2.5 py-1.5 text-xs text-[#B8ADA0] hover:text-[#E3A857]"
+                            className="rounded-lg px-2.5 py-1.5 text-xs text-[#B8ADA0] transition hover:text-[#E3A857]"
                           >
                             تعديل
                           </button>
@@ -226,7 +226,7 @@ export function MenuManager({ initialItems }: { initialItems: MenuItem[] }) {
                           <button
                             onClick={() => handleDelete(item)}
                             disabled={isPending}
-                            className="rounded-lg px-2.5 py-1.5 text-xs text-[#E88A8A] hover:text-red-400"
+                            className="rounded-lg px-2.5 py-1.5 text-xs text-[#E88A8A] transition hover:text-red-400"
                           >
                             حذف
                           </button>
@@ -250,6 +250,55 @@ export function MenuManager({ initialItems }: { initialItems: MenuItem[] }) {
             <h2 className="mb-4 text-lg font-bold">
               {editingId ? 'تعديل صنف' : 'إضافة صنف جديد'}
             </h2>
+
+            {/* صندوق الصورة — أول عنصر بالنموذج ليكون أوضح للمستخدم */}
+            <div className="mb-4 flex justify-center">
+              <label
+                htmlFor="menu-image-input"
+                className="relative flex h-28 w-28 cursor-pointer flex-col items-center justify-center gap-1 overflow-hidden rounded-2xl border-2 border-dashed border-[#332C25] bg-[#141110] text-center transition hover:border-[#E3A857]"
+              >
+                {uploading ? (
+                  <span className="text-xs text-[#E3A857]">جارِ الرفع...</span>
+                ) : form.image_url ? (
+                  // eslint-disable-next-line @next/next/no-img-element
+                  <img
+                    src={form.image_url}
+                    alt="معاينة الصنف"
+                    className="h-full w-full object-cover"
+                  />
+                ) : (
+                  <>
+                    <svg
+                      width="26"
+                      height="26"
+                      viewBox="0 0 24 24"
+                      fill="none"
+                      stroke="#8A8074"
+                      strokeWidth="1.6"
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                    >
+                      <rect x="3" y="5" width="18" height="14" rx="2" />
+                      <circle cx="9" cy="10" r="2" />
+                      <path d="M21 15l-5-4-9 7" />
+                    </svg>
+                    <span className="px-2 text-[10px] leading-tight text-[#8A8074]">
+                      اضغط لإضافة صورة
+                    </span>
+                  </>
+                )}
+              </label>
+              <input
+                id="menu-image-input"
+                type="file"
+                accept="image/*"
+                className="hidden"
+                onChange={(e) => {
+                  const file = e.target.files?.[0];
+                  if (file) handleImageUpload(file);
+                }}
+              />
+            </div>
 
             <div className="mb-3">
               <label className="mb-1 block text-sm text-[#C9BEB0]">
@@ -276,7 +325,7 @@ export function MenuManager({ initialItems }: { initialItems: MenuItem[] }) {
               />
             </div>
 
-            <div className="mb-3 grid grid-cols-2 gap-3">
+            <div className="mb-4 grid grid-cols-2 gap-3">
               <div>
                 <label className="mb-1 block text-sm text-[#C9BEB0]">
                   السعر (ل.س)
@@ -310,32 +359,6 @@ export function MenuManager({ initialItems }: { initialItems: MenuItem[] }) {
                   ))}
                 </select>
               </div>
-            </div>
-
-            <div className="mb-4">
-              <label className="mb-1 block text-sm text-[#C9BEB0]">
-                صورة الصنف
-              </label>
-              <input
-                type="file"
-                accept="image/*"
-                onChange={(e) => {
-                  const file = e.target.files?.[0];
-                  if (file) handleImageUpload(file);
-                }}
-                className="w-full text-sm text-[#B8ADA0]"
-              />
-              {uploading && (
-                <p className="mt-1 text-xs text-[#E3A857]">جاري رفع الصورة...</p>
-              )}
-              {form.image_url && !uploading && (
-                // eslint-disable-next-line @next/next/no-img-element
-                <img
-                  src={form.image_url}
-                  alt="معاينة"
-                  className="mt-2 h-16 w-16 rounded-lg object-cover"
-                />
-              )}
             </div>
 
             {formError && (
